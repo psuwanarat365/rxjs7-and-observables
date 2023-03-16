@@ -1,22 +1,11 @@
-import { Observable } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
 
-const interval$ = new Observable<number>((subscriber) => {
-  let counter = 1;
+const ajax$ = ajax<any>(
+  'https://random-data-api.com/api/name/random_name'
+)
 
-  const intervalId = setInterval(() => {
-    console.log('Emitted', counter);
-    subscriber.next(counter++);
-  }, 2000);
+ajax$.subscribe((data) => console.log('Sub 1: ',data.response.first_name));
 
-  // clearInterval to stop memory leak.
-  return () => {
-    clearInterval(intervalId);
-  };
-});
+ajax$.subscribe((data) => console.log('Sub 2: ',data.response.first_name));
 
-const subscription = interval$.subscribe((value) => console.log(value));
-
-setTimeout(() => {
-  console.log('Unsubscribe');
-  subscription.unsubscribe();
-}, 7000);
+ajax$.subscribe((data) => console.log('Sub 3: ',data.response.first_name));
