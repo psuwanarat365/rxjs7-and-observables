@@ -1,32 +1,14 @@
-import { Observable, of } from 'rxjs';
+import { from } from 'rxjs';
 
-ourOwnOf('Alice', 'Ben', 'Charlie').subscribe( {
-  next: value => console.log(value),
-  complete: () => console.log('Completed')
+const somePromise = new Promise((resolve, reject) => {
+  // resolve('Resolved');
+  reject('Rejected!');
 });
 
-function ourOwnOf(...args: string[]): Observable<string>{
-  return new Observable<string>(subscriber => {
-    for(let i=0; i< args.length; i++){
-      subscriber.next(args[i]);
-    }
-    subscriber.complete();
-  })
-}
+const observableFromPromise$ = from(somePromise);
 
-// of('Alice', 'Ben', 'Charlie').subscribe( {
-//   next: value => console.log(value),
-//   complete: () => console.log('Completed')
-// });
-
-// const name$ = new Observable<string>(subscriber => {
-//   subscriber.next('Alice');
-//   subscriber.next('Ben');
-//   subscriber.next('Charlie');
-//   subscriber.complete();
-// });
-
-// name$.subscribe({
-//   next: value => console.log(value),
-//   complete: () => console.log('Completed')
-// })
+observableFromPromise$.subscribe({
+  next: (value) => console.log(value),
+  error: (err) => console.log('Error', err),
+  complete: () => console.log('Completed'),
+});
